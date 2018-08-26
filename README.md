@@ -1,5 +1,5 @@
 # ConductorGlide
- Support Glide for Conductor library
+ Support Glide lifecycle for Conductor library
  
  ## Sample
  
