@@ -40,6 +40,17 @@ public abstract class BaseGlideControllerSupport<T extends RequestManager> imple
   private boolean hasDestroyedGlide = false;
   private boolean hasExited = false;
 
+  private boolean destroyGlide = true;
+  private boolean destroyWhenDestroyView = false;
+
+  public void setDestroyGlide(boolean destroy) {
+    destroyGlide = destroy;
+  }
+
+  public void setDestroyWhenDestroyView(boolean destroy) {
+    destroyWhenDestroyView = destroy;
+  }
+
   protected abstract T getGlideRequest(@NonNull ControllerLifecycle lifecycle, RequestManagerTreeNode requestManagerTreeNode);
 
   public BaseGlideControllerSupport(Controller controller) {
@@ -62,9 +73,14 @@ public abstract class BaseGlideControllerSupport<T extends RequestManager> imple
         }
       }
 
+      @Override public void postDestroyView(@NonNull Controller controller) {
+        if (destroyWhenDestroyView && destroyGlide){
+          destroyGlide();
+        }
+      }
+
       @Override public void postDestroy(@NonNull Controller controller) {
-        boolean isLast = !controller.getRouter().hasRootController();
-        if ((hasExited && !hasDestroyedGlide) && !isLast) {
+        if ((hasExited && !hasDestroyedGlide) && destroyGlide) {
           destroyGlide();
         }
       }
@@ -72,21 +88,24 @@ public abstract class BaseGlideControllerSupport<T extends RequestManager> imple
       @Override public void onChangeEnd(@NonNull Controller controller,
         @NonNull ControllerChangeHandler changeHandler, @NonNull ControllerChangeType changeType) {
         hasExited = !changeType.isEnter;
-        boolean isLast = !controller.getRouter().hasRootController();
-        if ((hasExited && !hasDestroyedGlide) && !isLast) {
+        if (changeHandler.removesFromViewOnPush() && (hasExited && !hasDestroyedGlide) && destroyGlide) {
           destroyGlide();
         }
       }
-
-      private void destroyGlide() {
-        if (lifecycle != null) {
-          lifecycle.onDestroy();
-        }
-        lifecycle = null;
-        glideRequests = null;
-        hasDestroyedGlide = true;
-      }
     });
+  }
+
+  private void destroyGlide() {
+    if (lifecycle != null) {
+      lifecycle.onDestroy();
+    }
+    lifecycle = null;
+    glideRequests = null;
+    hasDestroyedGlide = true;
+  }
+
+  public void forceDestroyGlide() {
+    destroyGlide();
   }
 
   public T getGlide() {
