@@ -3,7 +3,7 @@
  
  ## Installation
 ```
-implementation 'com.github.mkhytarmkhoian:conductor-glide:1.0.1'
+implementation 'com.github.mkhytarmkhoian:conductor-glide:1.0.2'
 ```
  
  ## Sample
@@ -48,7 +48,7 @@ public class HomeController extends Controller implements GlideProvider<GlideReq
  
  ## License
 ```
-Copyright 2018 Mkhytar Mkhoian, Inc.
+Copyright 2020 Lalafo.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
