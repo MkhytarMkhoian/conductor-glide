@@ -1,6 +1,11 @@
 # ConductorGlide
  Support Glide lifecycle for Conductor library
  
+ ## Installation
+```
+implementation 'com.github.mkhytarmkhoian:conductor-glide:1.0.1'
+```
+ 
  ## Sample
  
 ```java
